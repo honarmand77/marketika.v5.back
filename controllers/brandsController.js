@@ -1,10 +1,10 @@
 const { encryptData, decryptData } = require("../utils/encryption");
-const Banner = require("../models/Banner");
+const Brands = require("../models/Brands");
 
-exports.createBanner = async (req, res) => {
+exports.createBrands = async (req, res) => {
   try {
     // رمزگشایی داده‌های دریافتی از کلاینت
-    const decryptedData = decryptData(req.body); // فرض کنید داده‌ها در `data` ارسال شده‌اند
+    const decryptedData = decryptData(req.body.data); // فرض کنید داده‌ها در `data` ارسال شده‌اند
     const { title, link } = decryptedData;
 
     const imageUrl = req.file ? req.file.path : null;
@@ -13,11 +13,11 @@ exports.createBanner = async (req, res) => {
       return res.status(400).json({ message: "تمام فیلدها باید پر شوند" });
     }
 
-    const newBanner = new Banner({ title, imageUrl, link });
-    await newBanner.save();
+    const newBrands = new Brands({ title, imageUrl, link });
+    await newBrands.save();
 
     // رمزنگاری پاسخ قبل از ارسال به کلاینت
-    const encryptedResponse = encryptData({ message: "بنر با موفقیت ایجاد شد", banner: newBanner });
+    const encryptedResponse = encryptData({ message: "بنر با موفقیت ایجاد شد", Brands: newBrands });
     res.status(201).json(encryptedResponse);
   } catch (error) {
     console.error("خطای سرور:", error);
@@ -28,15 +28,15 @@ exports.createBanner = async (req, res) => {
 
 
 
-exports.getBanners = async (req, res) => {
+exports.getBrands = async (req, res) => {
   try {
-    const banners = await Banner.find();
-    if (banners.length === 0) {
+    const brands = await Brands.find();
+    if (brands.length === 0) {
       return res.status(404).json({ message: "هیچ بنری پیدا نشد" });
     }
 
     // رمزنگاری پاسخ قبل از ارسال به کلاینت
-    const encryptedResponse = encryptData(banners);
+    const encryptedResponse = encryptData(brands);
     res.status(200).json(encryptedResponse);
   } catch (error) {
     console.error(error);
@@ -47,7 +47,7 @@ exports.getBanners = async (req, res) => {
 
 
 
-exports.updateBanner = async (req, res) => {
+exports.updateBrands = async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -55,18 +55,18 @@ exports.updateBanner = async (req, res) => {
     const decryptedData = decryptData(req.body.data);
     const { title, imageUrl, link } = decryptedData;
 
-    const updatedBanner = await Banner.findByIdAndUpdate(
+    const updatedBrands = await Brands.findByIdAndUpdate(
       id,
       { title, imageUrl, link },
       { new: true }
     );
 
-    if (!updatedBanner) {
+    if (!updatedBrands) {
       return res.status(404).json({ message: "بنر مورد نظر یافت نشد" });
     }
 
     // رمزنگاری پاسخ قبل از ارسال به کلاینت
-    const encryptedResponse = encryptData({ message: "بنر با موفقیت به‌روزرسانی شد", updatedBanner });
+    const encryptedResponse = encryptData({ message: "بنر با موفقیت به‌روزرسانی شد", updatedBrands });
     res.json(encryptedResponse);
   } catch (error) {
     console.error(error);
@@ -76,12 +76,12 @@ exports.updateBanner = async (req, res) => {
 
 
 
-exports.deleteBanner = async (req, res) => {
+exports.deleteBrands = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const deletedBanner = await Banner.findByIdAndDelete(id);
-    if (!deletedBanner) {
+    const deletedBrands = await Brands.findByIdAndDelete(id);
+    if (!deletedBrands) {
       return res.status(404).json({ message: "بنر مورد نظر یافت نشد" });
     }
 

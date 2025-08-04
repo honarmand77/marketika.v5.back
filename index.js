@@ -16,6 +16,8 @@ const ViewRoutes = require("./routes/ViewRoutes")
 const subCategoryRoutes = require("./routes/subCategoryRoutes");
 const searchRoutes = require('./routes/searchRoutes');
 const reviewRoutes = require("./routes/reviewRoutes");
+const brandsRoutes = require("./routes/brandsRoute");
+
 // اضافه کردن روت‌ها
 connectDB();
 
@@ -27,7 +29,7 @@ app.use(express.urlencoded({ extended: true })); // برای درخواست‌ه
 
 
 app.use(cors({
-    origin: "http://localhost:3000",
+    origin: "https://masters-college-count-buried.trycloudflare.com",
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE" , "PATCH"],
   allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control'],
@@ -43,6 +45,7 @@ app.use("/api/orders", orderRoutes);
 app.use('/api/cart', cartRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/banners", bannerRoutes); 
+app.use("/api/Brands", brandsRoutes); 
 app.use("/api/categories", categoryRoutes);
 app.use("/api/views" , ViewRoutes)
 app.use("/api/subcategories", subCategoryRoutes);

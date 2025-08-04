@@ -109,6 +109,23 @@ const createUploader = (storage) => multer({
     limits: { fileSize: 5 * 1024 * 1024 } // محدودیت حجم فایل: 5MB
 });
 
+
+const brandStorage = multer.diskStorage({
+    destination: async (req, file, cb) => {
+        try {
+            const brandPath = await ensureDirectoryExists(
+                path.join("uploads", "brands") // پوشه برندها
+            );
+            cb(null, brandPath);
+        } catch (error) {
+            cb(error);
+        }
+    },
+    filename: (req, file, cb) => {
+        cb(null, generateUniqueFilename(file.originalname));
+    },
+});
+const uploadBrand = createUploader(brandStorage); 
 const uploadCategory = createUploader(categoryStorage);
 const uploadProduct = createUploader(productStorage);
 const uploadBanner = createUploader(bannerStorage);
@@ -126,5 +143,9 @@ module.exports = {
     uploadBanner, 
     uploadProduct, 
     uploadCategory,
-    generateFileUrl
+    generateFileUrl,
+    uploadBrand
 };
+
+
+
